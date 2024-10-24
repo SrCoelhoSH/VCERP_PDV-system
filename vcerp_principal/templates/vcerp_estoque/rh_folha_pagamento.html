@@ -1,0 +1,102 @@
+{% extends 'vcerp_estoque/base.html' %}
+{% load static %}
+{% block content %}
+<title>Folha de Pagamento</title>
+
+<style>
+    /* Estilo geral */
+    .content {
+        margin: 20px;
+    }
+
+    h1 {
+        text-align: center;
+        color: #2c3e50;
+    }
+
+    .payroll-form {
+        max-width: 800px;
+        margin: 0 auto;
+        background-color: #ecf0f1;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .payroll-form h2 {
+        text-align: center;
+        margin-bottom: 20px;
+        color: #2c3e50;
+    }
+
+    .payroll-form label {
+        display: block;
+        margin-bottom: 5px;
+        color: #2c3e50;
+    }
+
+    .payroll-form input[type="text"],
+    .payroll-form input[type="number"],
+    .payroll-form select {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 15px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-sizing: border-box;
+    }
+
+    .payroll-form button {
+        width: 100%;
+        padding: 10px;
+        background-color: #3498db;
+        color: #fff;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 16px;
+    }
+
+    .payroll-form button:hover {
+        background-color: #2980b9;
+    }
+</style>
+
+<div class="content">
+    <h1>Gerar Folha de Pagamento</h1>
+    <form class="payroll-form" action="{#}" method="POST">
+        {% csrf_token %}
+        
+        <h2>Dados do Funcionário</h2>
+        
+        <label for="funcionario">Nome do Funcionário:</label>
+        <input type="text" id="funcionario" name="funcionario" required>
+
+        <label for="salario_base">Salário Base (R$):</label>
+        <input type="number" id="salario_base" name="salario_base" step="0.01" required>
+
+        <label for="horas_extras">Horas Extras:</label>
+        <input type="number" id="horas_extras" name="horas_extras" step="0.01">
+
+        <label for="dias_trabalhados">Dias Trabalhados:</label>
+        <input type="number" id="dias_trabalhados" name="dias_trabalhados" min="1" max="31" required>
+
+        <label for="descontos">Descontos (R$):</label>
+        <input type="number" id="descontos" name="descontos" step="0.01">
+
+        <label for="adiantamentos">Adiantamentos (R$):</label>
+        <input type="number" id="adiantamentos" name="adiantamentos" step="0.01">
+
+        <h2>Benefícios</h2>
+
+        <label for="vale_transporte">Vale Transporte (R$):</label>
+        <input type="number" id="vale_transporte" name="vale_transporte" step="0.01">
+
+        <label for="vale_refeicao">Vale Refeição (R$):</label>
+        <input type="number" id="vale_refeicao" name="vale_refeicao" step="0.01">
+
+        <button type="submit">Gerar Folha de Pagamento</button>
+    </form>
+</div>
+
+{% endblock %}

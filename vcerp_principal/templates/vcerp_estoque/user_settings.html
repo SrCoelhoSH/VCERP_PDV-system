@@ -1,0 +1,93 @@
+{% extends 'vcerp_estoque/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="settings-container">
+    <h2>Configurações de Usuário</h2>
+    
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        
+        <!-- Campo de Nome de Usuário -->
+        <div class="form-group">
+            <label for="username">Nome de Usuário:</label>
+            <input type="text" id="username" name="username" value="{{ user.username }}" required>
+        </div>
+
+        <!-- Campo de E-mail -->
+        <div class="form-group">
+            <label for="email">E-mail:</label>
+            <input type="email" id="email" name="email" value="{{ user.email }}" required>
+        </div>
+
+        <!-- Campo para Upload de Imagem de Perfil -->
+        <div class="form-group">
+            <label for="profile_image">Imagem de Perfil:</label>
+            <input type="file" id="profile_image" name="profile_image">
+            <!-- Exibir a imagem de perfil atual, se houver -->
+            {% if user.profile.profile_image %}
+            <img src="{{ user.profile.profile_image.url }}" alt="Imagem de Perfil" class="profile-image-preview">
+            {% endif %}
+        </div>
+
+        <!-- Campo para Alterar Senha -->
+        <div class="form-group">
+            <label for="password">Nova Senha:</label>
+            <input type="password" id="password" name="password" placeholder="Deixe em branco se não quiser mudar">
+        </div>
+
+        <!-- Botão de Salvar Alterações -->
+        <div class="form-group">
+            <button type="submit" class="save-btn">Salvar Alterações</button>
+        </div>
+    </form>
+</div>
+
+<style>
+    .settings-container {
+        max-width: 600px;
+        margin: 0 auto;
+        padding: 20px;
+        background-color: #f9f9f9;
+        border-radius: 8px;
+    }
+
+    .form-group {
+        margin-bottom: 15px;
+    }
+
+    .form-group label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: bold;
+    }
+
+    .form-group input {
+        width: 100%;
+        padding: 8px;
+        border-radius: 4px;
+        border: 1px solid #ccc;
+    }
+
+    .profile-image-preview {
+        display: block;
+        margin-top: 10px;
+        max-width: 100px;
+        border-radius: 50%;
+    }
+
+    .save-btn {
+        background-color: #2c3e50;
+        color: white;
+        border: none;
+        padding: 10px 15px;
+        cursor: pointer;
+        border-radius: 5px;
+        transition: background-color 0.3s;
+    }
+
+    .save-btn:hover {
+        background-color: #34495e;
+    }
+</style>
+{% endblock %}

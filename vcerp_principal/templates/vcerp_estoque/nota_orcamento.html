@@ -1,0 +1,316 @@
+{% extends 'vcerp_estoque/base.html' %}
+{% load static %}
+{% block content %}
+<title>Gerar Nota de Orçamento</title>
+<style>
+    /* Estilo para a barra lateral */
+    .sidebar {
+        width: 250px;
+        height: 100vh;
+        background-color: #2c3e50;
+        position: fixed;
+        top: 0;
+        left: 0;
+        padding: 20px;
+        box-sizing: border-box;
+    }
+
+    .sidebar h2 {
+        color: #fff;
+        text-align: center;
+    }
+
+    .sidebar ul {
+        list-style-type: none;
+        padding: 0;
+    }
+
+    .sidebar ul li {
+        margin: 20px 0;
+        position: relative;
+    }
+
+    .sidebar ul li a {
+        color: #fff;
+        text-decoration: none;
+        display: block;
+        padding: 10px;
+        border-radius: 4px;
+        transition: background-color 0.3s;
+    }
+
+    .sidebar ul li a:hover {
+        background-color: #34495e;
+    }
+
+    .submenu {
+        list-style-type: none;
+        padding: 0;
+        margin: 0;
+        display: none;
+        position: absolute;
+        left: 100%;
+        top: 0;
+        background-color: #34495e;
+        min-width: 200px;
+    }
+
+    .submenu li {
+        margin: 0;
+    }
+
+    .submenu li a {
+        padding: 10px;
+        background-color: #34495e;
+    }
+
+    .submenu li a:hover {
+        background-color: #3a5169;
+    }
+
+    .sidebar ul li:hover .submenu {
+        display: block;
+        animation: fadeIn 0.3s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+        0% {
+            opacity: 0;
+            transform: translateY(-10px);
+        }
+
+        100% {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .main-content {
+        margin-left: 250px;
+        padding: 20px;
+    }
+
+    .top-bar {
+        width: calc(100% - 250px);
+        height: 60px;
+        background-color: #ecf0f1;
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        padding: 0 20px;
+        box-sizing: border-box;
+    }
+
+    .user-info {
+        display: flex;
+        align-items: center;
+    }
+
+    .user-avatar {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        margin-right: 10px;
+    }
+
+    .user-name {
+        font-size: 16px;
+        color: #2c3e50;
+    }
+
+    .content {
+        padding: 20px;
+    }
+
+    .budget-form {
+        max-width: 800px;
+        margin: 0 auto;
+        background-color: #ecf0f1;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .budget-form h2 {
+        text-align: center;
+        margin-bottom: 20px;
+        color: #2c3e50;
+    }
+
+    .budget-form label {
+        display: block;
+        margin-bottom: 5px;
+        color: #2c3e50;
+    }
+
+    .budget-form input[type="text"],
+    .budget-form input[type="date"],
+    .budget-form input[type="number"] {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 15px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-sizing: border-box;
+    }
+
+    .budget-form button {
+        width: 100%;
+        padding: 10px;
+        background-color: #3498db;
+        color: #fff;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 16px;
+    }
+
+    .budget-form button:hover {
+        background-color: #2980b9;
+    }
+
+    .items-table {
+        width: 100%;
+        margin-bottom: 20px;
+        border-collapse: collapse;
+    }
+
+    .items-table th,
+    .items-table td {
+        border: 1px solid #ccc;
+        padding: 10px;
+        text-align: left;
+    }
+
+    .items-table th {
+        background-color: #3498db;
+        color: white;
+    }
+
+    .add-item-btn {
+        background-color: #2ecc71;
+        color: #fff;
+        border: none;
+        padding: 10px;
+        cursor: pointer;
+        border-radius: 4px;
+    }
+
+    .add-item-btn:hover {
+        background-color: #27ae60;
+    }
+
+    .remove-item-btn {
+        background-color: #e74c3c;
+        color: white;
+        border: none;
+        padding: 5px;
+        cursor: pointer;
+        border-radius: 4px;
+    }
+
+    .remove-item-btn:hover {
+        background-color: #c0392b;
+    }
+
+</style>
+
+<div class="content">
+    <h1>Gerar Nota de Orçamento</h1>
+
+    <!-- Formulário de Geração de Nota de Orçamento -->
+    <form class="budget-form" action="/index/nota_orcamento" method="POST">
+        {% csrf_token %}
+        <h2>Informações do Orçamento</h2>
+
+        <label for="cliente">Nome do Cliente:</label>
+        <input type="text" id="cliente" name="cliente" required>
+
+        <label for="data_orcamento">Data do Orçamento:</label>
+        <input type="date" id="data_orcamento" name="data_orcamento" required>
+
+        <h2>Itens Orçados</h2>
+        <table class="items-table">
+            <thead>
+                <tr>
+                    <th>Descrição</th>
+                    <th>Quantidade</th>
+                    <th>Preço Unitário (R$)</th>
+                    <th>Total (R$)</th>
+                    <th>Ação</th>
+                </tr>
+            </thead>
+            <tbody id="items-table-body">
+                <tr>
+                    <td><input type="text" name="descricao[]" required></td>
+                    <td><input type="number" name="quantidade[]" min="1" value="1" required></td>
+                    <td><input type="number" name="preco_unitario[]" step="0.01" required></td>
+                    <td><input type="number" name="total[]" step="0.01" readonly></td>
+                    <td><button type="button" class="remove-item-btn" onclick="removerItem(this)">Remover</button></td>
+                </tr>
+            </tbody>
+        </table>
+        <button type="button" class="add-item-btn" onclick="adicionarItem()">Adicionar Item</button>
+
+        <label for="valor_total">Valor Total do Orçamento (R$):</label>
+        <input type="number" id="valor_total" name="valor_total" step="0.01" readonly>
+
+        <button type="submit">Gerar Nota de Orçamento</button>
+    </form>
+</div>
+
+<script>
+    function adicionarItem() {
+        var table = document.getElementById("items-table-body");
+        var newRow = document.createElement("tr");
+
+        newRow.innerHTML = `
+            <td><input type="text" name="descricao[]" required></td>
+            <td><input type="number" name="quantidade[]" min="1" value="1" required></td>
+            <td><input type="number" name="preco_unitario[]" step="0.01" required></td>
+            <td><input type="number" name="total[]" step="0.01" readonly></td>
+            <td><button type="button" class="remove-item-btn" onclick="removerItem(this)">Remover</button></td>
+        `;
+
+        table.appendChild(newRow);
+    }
+
+    function removerItem(button) {
+        var row = button.closest('tr');
+        row.remove();
+        atualizarValorTotal();
+    }
+
+    document.querySelector('.budget-form').addEventListener('input', function (e) {
+        if (e.target.matches('input[name="quantidade[]"], input[name="preco_unitario[]"]')) {
+            atualizarTotal(e.target.closest('tr'));
+        }
+    });
+
+    function atualizarTotal(linha) {
+        var quantidade = linha.querySelector('input[name="quantidade[]"]').value;
+        var precoUnitario = linha.querySelector('input[name="preco_unitario[]"]').value;
+        var total = linha.querySelector('input[name="total[]"]');
+
+        if (quantidade && precoUnitario) {
+            total.value = (quantidade * precoUnitario).toFixed(2);
+        } else {
+            total.value = '';
+        }
+
+        atualizarValorTotal();
+    }
+
+    function atualizarValorTotal() {
+        var totais = document.querySelectorAll('input[name="total[]"]');
+        var valorTotal = 0;
+
+        totais.forEach(function (total) {
+            valorTotal += parseFloat(total.value) || 0;
+        });
+
+        document.getElementById('valor_total').value = valorTotal.toFixed(2);
+    }
+</script>
+
+{% endblock %}

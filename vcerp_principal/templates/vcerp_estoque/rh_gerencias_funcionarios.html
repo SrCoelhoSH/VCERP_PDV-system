@@ -1,0 +1,227 @@
+{% extends 'vcerp_estoque/base.html' %}
+{% load static %}
+{% block content %}
+    <title>Gerenciar Funcionários</title>
+    <style>
+        .sidebar {
+            width: 250px;
+            height: 100vh;
+            background-color: #2c3e50;
+            position: fixed;
+            top: 0;
+            left: 0;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .sidebar h2 {
+            color: #fff;
+            text-align: center;
+        }
+
+        .sidebar ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .sidebar ul li {
+            margin: 20px 0;
+            position: relative;
+        }
+
+        .sidebar ul li a {
+            color: #fff;
+            text-decoration: none;
+            display: block;
+            padding: 10px;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+
+        .sidebar ul li a:hover {
+            background-color: #34495e;
+        }
+
+        .submenu {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+            display: none;
+            position: absolute;
+            left: 100%;
+            top: 0;
+            background-color: #34495e;
+            min-width: 200px;
+        }
+
+        .submenu li {
+            margin: 0;
+        }
+
+        .submenu li a {
+            padding: 10px;
+            background-color: #34495e;
+        }
+
+        .submenu li a:hover {
+            background-color: #3a5169;
+        }
+
+        .sidebar ul li:hover .submenu {
+            display: block;
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            0% {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .main-content {
+            margin-left: 250px;
+            padding: 20px;
+        }
+
+        .top-bar {
+            width: calc(100% - 250px);
+            height: 60px;
+            background-color: #ecf0f1;
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            padding: 0 20px;
+            box-sizing: border-box;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+
+        .user-name {
+            font-size: 16px;
+            color: #2c3e50;
+        }
+
+        /* Estilos da Tabela */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #34495e;
+            color: #fff;
+        }
+
+        tr:hover {
+            background-color: #f5f5f5;
+        }
+
+        .action-btn {
+            padding: 5px 10px;
+            margin-right: 5px;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+
+        .action-btn.edit {
+            background-color: #3498db;
+            color: #fff;
+        }
+
+        .action-btn.penalize {
+            background-color: #e67e22;
+            color: #fff;
+        }
+
+        .action-btn.inactivate {
+            background-color: #e74c3c;
+            color: #fff;
+        }
+
+        .action-btn.activate {
+            background-color: #2ecc71;
+            color: #fff;
+        }
+
+    </style>
+</head>
+
+<body>
+    
+        <!-- Content -->
+        <div class="content">
+            <h1>Gerenciar Funcionários</h1>
+
+            <!-- Tabela de Funcionários -->
+            <table class="customer-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nome</th>
+                        <th>Cargo</th>
+                        <th>Departamento</th>
+                        <th>Status</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>1</td>
+                        <td>Ana Costa</td>
+                        <td>Analista</td>
+                        <td>Financeiro</td>
+                        <td>Ativo</td>
+                        <td>
+                            <button class="action-btn edit">Editar</button>
+                            <button class="action-btn penalize">Penalizar</button>
+                            <button class="action-btn inactivate">Inativar</button>
+                            <button class="action-btn activate">Ativar</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>Pedro Silva</td>
+                        <td>Desenvolvedor</td>
+                        <td>TI</td>
+                        <td>Ativo</td>
+                        <td>
+                            <button class="action-btn edit">Editar</button>
+                            <button class="action-btn penalize">Penalizar</button>
+                            <button class="action-btn inactivate">Inativar</button>
+                            <button class="action-btn activate">Ativar</button>
+                        </td>
+                    </tr>
+                    <!-- Adicione mais funcionários conforme necessário -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</body>
+
+</html>
+{% endblock %}

@@ -1,0 +1,186 @@
+{% extends 'vcerp_estoque/base.html' %}
+{% load static %}
+{% block content %}
+    <title>Cadastro de Funcionário</title>
+    <style>
+        .sidebar {
+            width: 250px;
+            height: 100vh;
+            background-color: #2c3e50;
+            position: fixed;
+            top: 0;
+            left: 0;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .sidebar h2 {
+            color: #fff;
+            text-align: center;
+        }
+
+        .sidebar ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .sidebar ul li {
+            margin: 20px 0;
+            position: relative;
+        }
+
+        .sidebar ul li a {
+            color: #fff;
+            text-decoration: none;
+            display: block;
+            padding: 10px;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+
+        .sidebar ul li a:hover {
+            background-color: #34495e;
+        }
+
+        .submenu {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+            display: none;
+            position: absolute;
+            left: 100%;
+            top: 0;
+            background-color: #34495e;
+            min-width: 200px;
+        }
+
+        .submenu li {
+            margin: 0;
+        }
+
+        .submenu li a {
+            padding: 10px;
+            background-color: #34495e;
+        }
+
+        .submenu li a:hover {
+            background-color: #3a5169;
+        }
+
+        .sidebar ul li:hover .submenu {
+            display: block;
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            0% {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .main-content {
+            margin-left: 250px;
+            padding: 20px;
+        }
+
+        .top-bar {
+            width: calc(100% - 250px);
+            height: 60px;
+            background-color: #ecf0f1;
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            padding: 0 20px;
+            box-sizing: border-box;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+
+        .user-name {
+            font-size: 16px;
+            color: #2c3e50;
+        }
+
+        /* Estilos do Formulário */
+        form {
+            display: flex;
+            flex-direction: column;
+            max-width: 400px;
+            margin-top: 20px;
+        }
+
+        label {
+            margin-top: 10px;
+        }
+
+        input[type="text"], select {
+            padding: 10px;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+
+        button[type="submit"] {
+            padding: 10px;
+            font-size: 14px;
+            background-color: #2ecc71;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            margin-top: 20px;
+            cursor: pointer;
+        }
+
+        button[type="submit"]:hover {
+            background-color: #27ae60;
+        }
+
+    </style>
+</head>
+
+<body>
+    
+
+        <!-- Content -->
+        <div class="content">
+            <h1>Cadastro de Funcionário</h1>
+            <form action="#" method="post">
+                <label for="name">Nome:</label>
+                <input type="text" id="name" name="name" required>
+                
+                <label for="position">Cargo:</label>
+                <input type="text" id="position" name="position" required>
+                
+                <label for="department">Departamento:</label>
+                <input type="text" id="department" name="department" required>
+                
+                <label for="status">Status:</label>
+                <select id="status" name="status" required>
+                    <option value="ativo">Ativo</option>
+                    <option value="inativo">Inativo</option>
+                </select>
+
+                <button type="submit">Cadastrar Funcionário</button>
+            </form>
+        </div>
+    </div>
+
+</body>
+
+</html>
+{% endblock %}

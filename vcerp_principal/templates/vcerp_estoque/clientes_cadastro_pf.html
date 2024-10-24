@@ -1,0 +1,38 @@
+{% extends 'vcerp_estoque/base.html' %}
+{% load static %}
+{% block content %}
+
+<title>Cadastro de Pessoa Física</title>
+    
+</head>
+
+<body>
+    
+
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Top Bar -->
+        
+        <!-- Content -->
+        <div class="content">
+            <h1>Cadastro de Pessoa Física</h1>
+            {% if messages %}
+            <div class="alert alert-success">
+                {% for message in messages %}
+                <p>{{ message }}</p>
+                {% endfor %}
+            </div>
+            {% endif %}
+            <form class="customer-form" action="{% url 'clientes_cadastro_pf' %}" method="POST">
+                {% csrf_token %}
+                {{ form_pf.as_p }}
+                <button type="submit">Cadastrar Pessoa Física</button>
+                <button href="{% url 'clientes' %}" class="cancel-btn">Cancelar</button>
+            </form>
+        </div>
+    </div>
+</body>
+
+</html>
+{% endblock %}

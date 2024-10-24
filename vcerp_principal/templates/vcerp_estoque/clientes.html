@@ -1,0 +1,307 @@
+{% extends 'vcerp_estoque/base.html' %}
+{% load static %}
+{% block content %}
+<title>Lista de Clientes</title>
+<style>
+    /* Estilo para a barra lateral */
+    .sidebar {
+        width: 250px;
+        height: 100vh;
+        background-color: #2c3e50;
+        position: fixed;
+        top: 0;
+        left: 0;
+        padding: 20px;
+        box-sizing: border-box;
+    }
+
+    .sidebar h2 {
+        color: #fff;
+        text-align: center;
+    }
+
+    .sidebar ul {
+        list-style-type: none;
+        padding: 0;
+    }
+
+    .sidebar ul li {
+        margin: 20px 0;
+        position: relative;
+    }
+
+    .sidebar ul li a {
+        color: #fff;
+        text-decoration: none;
+        display: block;
+        padding: 10px;
+        border-radius: 4px;
+        transition: background-color 0.3s;
+    }
+
+    .sidebar ul li a:hover {
+        background-color: #34495e;
+    }
+
+    .submenu {
+        list-style-type: none;
+        padding: 0;
+        margin: 0;
+        display: none;
+        position: absolute;
+        left: 100%;
+        top: 0;
+        background-color: #34495e;
+        min-width: 200px;
+    }
+
+    .submenu li {
+        margin: 0;
+    }
+
+    .submenu li a {
+        padding: 10px;
+        background-color: #34495e;
+    }
+
+    .submenu li a:hover {
+        background-color: #3a5169;
+    }
+
+    .sidebar ul li:hover .submenu {
+        display: block;
+        animation: fadeIn 0.3s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+        0% {
+            opacity: 0;
+            transform: translateY(-10px);
+        }
+
+        100% {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .main-content {
+        margin-left: 250px;
+        padding: 20px;
+    }
+
+    .top-bar {
+        width: calc(100% - 250px);
+        height: 60px;
+        background-color: #ecf0f1;
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        padding: 0 20px;
+        box-sizing: border-box;
+    }
+
+    .user-info {
+        display: flex;
+        align-items: center;
+    }
+
+    .user-avatar {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        margin-right: 10px;
+    }
+
+    .user-name {
+        font-size: 16px;
+        color: #2c3e50;
+    }
+
+    .content {
+        padding: 20px;
+    }
+
+    .filter-container {
+        margin-bottom: 20px;
+    }
+
+    .filter-container label {
+        margin-right: 10px;
+    }
+
+    .customer-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    .customer-table th,
+    .customer-table td {
+        border: 1px solid #ddd;
+        padding: 8px;
+        text-align: left;
+    }
+
+    .customer-table th {
+        background-color: #2c3e50;
+        color: white;
+    }
+
+    .customer-table tr:nth-child(even) {
+        background-color: #f2f2f2;
+    }
+
+    .customer-table tr:hover {
+        background-color: #ddd;
+    }
+
+    .action-btn {
+        background-color: #3498db;
+        color: white;
+        border: none;
+        padding: 5px 10px;
+        border-radius: 3px;
+        cursor: pointer;
+        font-size: 14px;
+    }
+
+    .action-btn.edit {
+        background-color: #f39c12;
+    }
+
+    .action-btn.penalize {
+        background-color: #e74c3c;
+    }
+
+    .action-btn.inactivate {
+        background-color: #95a5a6;
+    }
+
+    .action-btn.activate {
+        background-color: #2ecc71;
+    }
+
+    .alert-success {
+        background-color: #dff0d8;
+        color: #3c763d;
+    }
+    .inativo td {
+    text-decoration: line-through;
+    color: #a0a0a0; /* Cor cinza para destacar que está inativo */
+    }
+</style>
+</head>
+
+<body>
+    <!-- Sidebar -->
+
+    <!-- Content -->
+    <div class="content">
+        <h1>Lista de Clientes</h1>
+        {% if messages %}
+        <div class="alert alert-success">
+            {% for message in messages %}
+            <p>{{ message }}</p>
+            {% endfor %}
+        </div>
+        {% endif %}
+        <!-- Filtros -->
+        <form method="GET" action="{% url 'clientes' %}">
+            <div class="filter-container">
+                <label for="tipo_cliente">Filtrar por:</label>
+                <select id="tipo_cliente" name="tipo_cliente">
+                    <option value="">Todos</option>
+                    <option value="pf" {% if tipo_cliente == 'pf' %}selected{% endif %}>Pessoa Física</option>
+                    <option value="pj" {% if tipo_cliente == 'pj' %}selected{% endif %}>Pessoa Jurídica</option>
+                </select>
+                <label for="busca">Buscar:</label>
+                <input type="text" id="busca" name="busca" value="{{ busca }}" placeholder="Nome, CPF ou CNPJ">
+                <button type="submit">Buscar</button>
+            </div>
+        </form>
+
+        <!-- Tabela de Clientes -->
+        <table class="customer-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nome</th>
+                    <th>Tipo</th>
+                    <th>CPF/CNPJ</th>
+                    <th>E-mail</th>
+                    <th>Penalidade</th>
+                    <th>Status</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% if clientes_pf %}
+                {% for cliente in clientes_pf %}
+                <tr class="{% if cliente.status == 'inativo' %}inativo{% endif %}">
+                    <td>{{ cliente.id }}</td>
+                    <td>{{ cliente.nome }}</td>
+                    <td>Pessoa Física</td>
+                    <td>{{ cliente.cpf }}</td>
+                    <td>{{ cliente.email }}</td>
+                    <td>{{ cliente.penalizado }}</td>
+                    <td>{{ cliente.status }}</td>
+                   
+                    <td>
+                        <a href="{% url 'editar_cliente_pf' cliente.id %}" class="action-btn edit">Editar</a>
+                        <a href="{% url 'penalizar_cliente' cliente.id 'pf' %}" class="action-btn penalize">Penalizar</a>
+
+                        <button onclick="alterarStatusClientePF('{{ cliente.id }}', 'inativar')" class="action-btn inactivate">Inativar</button>
+                        <button onclick="alterarStatusClientePF('{{ cliente.id }}', 'ativar')" class="action-btn activate">Ativar</button>
+                        <button onclick="excluirCliente('{{ cliente.id }}')" class="action-btn delete">Excluir</button>
+                    </td>
+                </tr>
+                {% endfor %}
+                {% endif %}
+                {% if clientes_pj %}
+                {% for cliente in clientes_pj %}
+                <tr class="{% if cliente.status == 'inativo' %}inativo{% endif %}">
+                    <td>{{ cliente.id }}</td>
+                    <td>{{ cliente.razao_social }}</td>
+                    <td>Pessoa Jurídica</td>
+                    <td>{{ cliente.cnpj }}</td>
+                    <td>{{ cliente.email }}</td>
+                    <td>{{ cliente.penalizado }}</td>
+                    <td>{{ cliente.status }}</td>
+                   
+                    <td>
+                        <a href="{% url 'editar_cliente_pj' cliente.id %}" class="action-btn edit">Editar</a>
+                        <a href="{% url 'penalizar_cliente' cliente.id 'pj' %}" class="action-btn penalize">Penalizar</a>
+                        <button onclick="alterarStatusClientePJ('{{ cliente.id }}', 'inativar')" class="action-btn inactivate">Inativar</button>
+                        <button onclick="alterarStatusClientePJ('{{ cliente.id }}', 'ativar')" class="action-btn activate">Ativar</button>
+                        <button onclick="excluirCliente('{{ cliente.id }}')" class="action-btn delete">Excluir</button>
+                    </td>
+                </tr>
+                {% endfor %}
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
+</body>
+
+<script>
+    function alterarStatusClientePF(clienteId, acao) {
+        if (confirm('Tem certeza que deseja ' + acao + ' este cliente?')) {
+            window.location.href = '/pessoa_fisica/' + clienteId + '/' + acao + '/';
+        }
+    }
+
+    function alterarStatusClientePJ(clienteId, acao) {
+        if (confirm('Tem certeza que deseja ' + acao + ' este cliente?')) {
+            window.location.href = '/pessoa_juridica/' + clienteId + '/' + acao + '/';
+        }
+    }
+
+    function excluirCliente(clienteId) {
+        if (confirm('Tem certeza que deseja excluir este cliente?')) {
+            window.location.href = '{% url "excluir_cliente" %}?id=' + clienteId;
+        }
+    }
+</script>
+
+</html>
+{% endblock %}

@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Fechamento de Caixa</title>
+</head>
+<body>
+    <h1>{{ message }}</h1>
+    {% if success %}
+        <p>O caixa foi fechado com sucesso!</p>
+    {% else %}
+        <p>Ocorreu um erro ao tentar fechar o caixa.</p>
+    {% endif %}
+    <a href="{% url 'login' %}">Voltar para o login</a>
+</body>
+</html>

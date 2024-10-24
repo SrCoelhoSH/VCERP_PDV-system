@@ -1,0 +1,63 @@
+{% extends 'vcerp_estoque/base.html' %}
+
+{% block content %}
+    <style>
+        .details-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #ecf0f1;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .details-container h2 {
+            text-align: center;
+            color: #2c3e50;
+        }
+        .details-container p {
+            font-size: 16px;
+            color: #2c3e50;
+        }
+        .back-btn {
+            display: block;
+            width: 100px;
+            margin: 20px auto;
+            padding: 10px;
+            background-color: #3498db;
+            color: #fff;
+            text-align: center;
+            border-radius: 4px;
+            text-decoration: none;
+        }
+        .back-btn:hover {
+            background-color: #2980b9;
+        }
+    </style>
+
+    <div class="details-container">
+        <h2>Detalhes do Produto</h2>
+        <p><strong>ID:</strong> {{ produto.id }}</p>
+        <p><strong>Nome:</strong> {{ produto.nome }}</p>
+        <p><strong>Tipo:</strong> {{ produto.get_tipo_display }}</p>
+        <p><strong>Descrição:</strong> {{ produto.descricao }}</p>
+        <p><strong>Código de Barras:</strong> {{ produto.codigo_barra }}</p>
+        <p><strong>Quantidade:</strong> {{ produto.quantidade }}</p>
+        <p><strong>Preço de Compra:</strong> R$ {{ produto.preco_compra }}</p>
+        <p><strong>Preço de Venda:</strong> R$ {{ produto.preco_venda }}</p>
+        <p><strong>Fornecedor:</strong> {{ produto.fornecedor }}</p>
+        <p><strong>Unidade de Medida:</strong> {{ produto.unidade_medida }}</p>
+        <p><strong>Estoque Mínimo:</strong> {{ produto.estoque_minimo }}</p>
+        <p><strong>Localização:</strong> {{ produto.localizacao }}</p>
+        <p><strong>Data de Cadastro:</strong> {{ produto.data_cadastro }}</p>
+        
+        <!-- Exibe a imagem do produto se existir -->
+        {% if produto.imagem_produto %}
+        <p><strong>Imagem:</strong></p>
+        <img src="{{ produto.imagem_produto.url }}" alt="{{ produto.nome }}" style="max-width: 100%; height: auto;">
+        {% else %}
+        <p>Imagem não disponível.</p>
+        {% endif %}
+
+        <a href="{% url 'estoque' %}" class="back-btn">Voltar</a>
+    </div>
+{% endblock %}

@@ -1,0 +1,215 @@
+{% extends 'vcerp_estoque/base.html' %}
+{% load static %}
+{% block content %}
+    <title>Cadastro de Pessoa Física</title>
+    <style>
+        /* Inclua o mesmo estilo ou ajuste conforme necessário */
+        .sidebar {
+            width: 250px;
+            height: 100vh;
+            background-color: #2c3e50;
+            position: fixed;
+            top: 0;
+            left: 0;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .sidebar h2 {
+            color: #fff;
+            text-align: center;
+        }
+
+        .sidebar ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .sidebar ul li {
+            margin: 20px 0;
+            position: relative;
+        }
+
+        .sidebar ul li a {
+            color: #fff;
+            text-decoration: none;
+            display: block;
+            padding: 10px;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+
+        .sidebar ul li a:hover {
+            background-color: #34495e;
+        }
+
+        .submenu {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+            display: none;
+            position: absolute;
+            left: 100%;
+            top: 0;
+            background-color: #34495e;
+            min-width: 200px;
+        }
+
+        .submenu li {
+            margin: 0;
+        }
+
+        .submenu li a {
+            padding: 10px;
+            background-color: #34495e;
+        }
+
+        .submenu li a:hover {
+            background-color: #3a5169;
+        }
+
+        .sidebar ul li:hover .submenu {
+            display: block;
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            0% {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .main-content {
+            margin-left: 250px;
+            padding: 20px;
+        }
+
+        .top-bar {
+            width: calc(100% - 250px);
+            height: 60px;
+            background-color: #ecf0f1;
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            padding: 0 20px;
+            box-sizing: border-box;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+
+        .user-name {
+            font-size: 16px;
+            color: #2c3e50;
+        }
+
+        .content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .customer-form {
+            display: flex;
+            flex-direction: column;
+            max-width: 600px;
+            width: 100%;
+        }
+
+        .customer-form label {
+            margin-top: 10px;
+        }
+
+        .customer-form input[type="text"],
+        .customer-form select {
+            padding: 10px;
+            font-size: 14px;
+            margin-top: 5px;
+            width: 100%;
+        }
+
+        .customer-form button[type="submit"],
+        .customer-form .cancel-btn {
+            padding: 10px;
+            font-size: 14px;
+            border: none;
+            border-radius: 5px;
+            margin-top: 20px;
+            cursor: pointer;
+        }
+
+        .customer-form button[type="submit"] {
+            background-color: #2ecc71;
+            color: #fff;
+        }
+
+        .customer-form button[type="submit"]:hover {
+            background-color: #27ae60;
+        }
+
+        .customer-form .cancel-btn {
+            background-color: #e74c3c;
+            color: #fff;
+            margin-left: 10px;
+        }
+
+        .customer-form .cancel-btn:hover {
+            background-color: #c0392b;
+        }
+
+        .alert {
+            padding: 10px;
+            margin-top: 20px;
+            border-radius: 5px;
+        }
+
+        .alert-success {
+            background-color: #dff0d8;
+            color: #3c763d;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Sidebar -->
+   
+
+        <!-- Content -->
+        <div class="content">
+            {% if messages %}
+            <div class="alert alert-success">
+                {% for message in messages %}
+                <p>{{ message }}</p>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            <h1>Editar Pessoa Física</h1>
+            <form method="post">
+                {% csrf_token %}
+                {{ form_pf.as_p }}
+                <button type="submit">Salvar Alterações</button>
+                <button href="{% url 'clientes' %}" class="cancel-btn">Cancelar</button>
+            </form>
+            
+        </div>
+    </div>
+</body>
+
+</html>
+{% endblock %}

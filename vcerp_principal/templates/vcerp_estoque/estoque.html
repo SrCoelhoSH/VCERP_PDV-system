@@ -1,0 +1,232 @@
+{% extends 'vcerp_estoque/base.html' %}
+{% load static %}
+{% block content %}
+    <style>
+        /* Estilo para a barra lateral */
+        .sidebar {
+            width: 250px;
+            height: 100vh;
+            background-color: #2c3e50;
+            position: fixed;
+            top: 0;
+            left: 0;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .sidebar h2 {
+            color: #fff;
+            text-align: center;
+        }
+
+        .sidebar ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .sidebar ul li {
+            margin: 20px 0;
+        }
+
+        .sidebar ul li a {
+            color: #fff;
+            text-decoration: none;
+            padding: 10px;
+            display: block;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+
+        .sidebar ul li a:hover {
+            background-color: #34495e;
+        }
+
+        .main-content {
+            margin-left: 250px;
+            padding: 20px;
+        }
+
+        .top-bar {
+            width: calc(100% - 250px);
+            height: 60px;
+            background-color: #ecf0f1;
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            padding: 0 20px;
+            box-sizing: border-box;
+        }
+
+        .content {
+            padding: 20px;
+        }
+
+        /* Estilo para a tabela de produtos */
+        .product-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        .product-table th,
+        .product-table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        .product-table th {
+            background-color: #2c3e50;
+            color: white;
+        }
+
+        .product-table tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        .product-table tr:hover {
+            background-color: #ddd;
+        }
+
+        /* Estilo do formulário de busca */
+        .filter-form {
+            margin-bottom: 20px;
+            padding: 10px;
+            background-color: #ecf0f1;
+            border-radius: 8px;
+        }
+
+        .filter-form label {
+            margin-right: 10px;
+        }
+
+        .filter-form input[type="text"],
+        .filter-form select,
+        .filter-form input[type="date"] {
+            padding: 8px;
+            margin-right: 10px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+        }
+
+        .filter-form button {
+            padding: 10px 15px;
+            background-color: #3498db;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .filter-form button:hover {
+            background-color: #2980b9;
+        }
+    </style>
+
+<div class="container">
+    <!-- Formulário de busca avançada -->
+    <form method="GET" class="filter-form">
+        <label for="nome">Nome:</label>
+        <input type="text" name="nome" id="nome" value="{{ request.GET.nome }}">
+
+        <label for="tipo">Tipo:</label>
+        <select name="tipo" id="tipo">
+            <option value="">Todos</option>
+            {% for key, value in produto.TIPOS %}
+            <option value="{{ key }}" {% if request.GET.tipo == key %}selected{% endif %}>{{ value }}</option>
+            {% endfor %}
+        </select>
+
+        <label for="quantidade_min">Qtd Mín:</label>
+        <input type="number" name="quantidade_min" id="quantidade_min" value="{{ request.GET.quantidade_min }}">
+
+        <label for="quantidade_max">Qtd Máx:</label>
+        <input type="number" name="quantidade_max" id="quantidade_max" value="{{ request.GET.quantidade_max }}">
+
+        <label for="data_inicio">Data Início:</label>
+        <input type="date" name="data_inicio" id="data_inicio" value="{{ request.GET.data_inicio }}">
+
+        <label for="data_fim">Data Fim:</label>
+        <input type="date" name="data_fim" id="data_fim" value="{{ request.GET.data_fim }}">
+
+        <label for="itens_por_pagina">Itens por Página:</label>
+        <select name="itens_por_pagina" id="itens_por_pagina">
+            <option value="10" {% if request.GET.itens_por_pagina == "10" %}selected{% endif %}>10</option>
+            <option value="20" {% if request.GET.itens_por_pagina == "20" %}selected{% endif %}>20</option>
+            <option value="50" {% if request.GET.itens_por_pagina == "50" %}selected{% endif %}>50</option>
+            <option value="100" {% if request.GET.itens_por_pagina == "100" %}selected{% endif %}>100</option>
+        </select>
+
+        <button type="submit">Buscar</button>
+    </form>
+
+    <p>Gerencie seus produtos abaixo.</p>
+    {% if messages %}
+    <div class="alert alert-success">
+        {% for message in messages %}
+        <p>{{ message }}</p>
+        {% endfor %}
+    </div>
+    {% endif %}
+    
+    <!-- Tabela de Produtos -->
+    <table class="product-table">
+        <thead>
+            <tr>
+                <th>ID do Produto</th>
+                <th>Nome</th>
+                <th>Tipo</th>
+                <th>Quantidade</th>
+                <th>Data do Cadastro</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for produto in produtos %}
+            <tr>
+                <td>{{ produto.id }}</td>
+                <td>{{ produto.nome }}</td>
+                <td>{{ produto.get_tipo_display }}</td>
+                <td>{{ produto.quantidade }}</td>
+                <td>{{ produto.data_cadastro }}</td>
+                <td>
+                    <button class="action-btn edit" onclick="window.location.href='{% url 'editar_produto' produto.id %}'">Editar</button>
+                    <button class="action-btn" onclick="window.location.href='{% url 'estoque_detalhes_produto' produto.id %}'">Detalhes</button>
+                    <form method="POST" action="{% url 'deletar_produto' pk=produto.id %}" style="display:inline;">
+                        {% csrf_token %}
+                        <button type="submit" class="action-btn delete">Excluir</button>
+                    </form>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="6">Nenhum produto encontrado.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    
+    <!-- Paginação -->
+    <div class="pagination">
+        {% if produtos.has_previous %}
+            <a href="?{% if request.GET.nome %}nome={{ request.GET.nome }}&{% endif %}
+                       {% if request.GET.tipo %}tipo={{ request.GET.tipo }}&{% endif %}
+                       {% if request.GET.quantidade_min %}quantidade_min={{ request.GET.quantidade_min }}&{% endif %}
+                       {% if request.GET.quantidade_max %}quantidade_max={{ request.GET.quantidade_max }}&{% endif %}
+                       {% if request.GET.data_inicio %}data_inicio={{ request.GET.data_inicio }}&{% endif %}
+                       {% if request.GET.data_fim %}data_fim={{ request.GET.data_fim }}&{% endif %}
+                       page={{ produtos.previous_page_number }}">Anterior</a>
+        {% endif %}
+        <span>Página {{ produtos.number }} de {{ produtos.paginator.num_pages }}</span>
+        {% if produtos.has_next %}
+            <a href="?{% if request.GET.nome %}nome={{ request.GET.nome }}&{% endif %}
+                       {% if request.GET.tipo %}tipo={{ request.GET.tipo }}&{% endif %}
+                       {% if request.GET.quantidade_min %}quantidade_min={{ request.GET.quantidade_min }}&{% endif %}
+                       {% if request.GET.quantidade_max %}quantidade_max={{ request.GET.quantidade_max }}&{% endif %}
+                       {% if request.GET.data_inicio %}data_inicio={{ request.GET.data_inicio }}&{% endif %}
+                       {% if request.GET.data_fim %}data_fim={{ request.GET.data_fim }}&{% endif %}
+                       page={{ produtos.next_page_number }}">Próximo</a>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

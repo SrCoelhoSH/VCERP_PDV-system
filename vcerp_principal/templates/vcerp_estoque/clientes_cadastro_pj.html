@@ -1,0 +1,112 @@
+{% extends 'vcerp_estoque/base.html' %}
+{% load static %}
+{% block content %}
+<title>Cadastro de Pessoa Jurídica</title>
+
+<style>
+    
+    .top-bar {
+        height: 60px;
+        background-color: #ecf0f1;
+        padding: 0 20px;
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        box-sizing: border-box;
+    }
+
+    .content {
+        padding: 20px;
+        background-color: #ecf0f1;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        max-width: 800px;
+        margin: 0 auto;
+    }
+
+    .content h1 {
+        text-align: center;
+        color: #2c3e50;
+        margin-bottom: 20px;
+    }
+
+    .alert {
+        background-color: #2ecc71;
+        color: white;
+        padding: 10px;
+        border-radius: 5px;
+        margin-bottom: 20px;
+        text-align: center;
+    }
+
+    .alert p {
+        margin: 0;
+    }
+
+    .customer-form {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .customer-form input[type="text"],
+    .customer-form input[type="email"],
+    .customer-form input[type="password"],
+    .customer-form select {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 15px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-sizing: border-box;
+    }
+
+    .customer-form button {
+        padding: 10px;
+        background-color: #3498db;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 16px;
+    }
+
+    .customer-form button:hover {
+        background-color: #2980b9;
+    }
+
+    .cancel-btn {
+        padding: 10px;
+        background-color: #e74c3c;
+        color: white;
+        text-decoration: none;
+        border-radius: 4px;
+        display: inline-block;
+        text-align: center;
+        margin-top: 10px;
+    }
+
+    .cancel-btn:hover {
+        background-color: #c0392b;
+    }
+</style>
+
+<div class="main-content">
+    <div class="content">
+        <h1>Cadastro de Pessoa Jurídica</h1>
+        {% if messages %}
+        <div class="alert alert-success">
+            {% for message in messages %}
+            <p>{{ message }}</p>
+            {% endfor %}
+        </div>
+        {% endif %}
+        <form class="customer-form" action="{% url 'clientes_cadastro_pj' %}" method="POST">
+            {% csrf_token %}
+            {{ form_pj.as_p }}
+            <button type="submit">Cadastrar Pessoa Jurídica</button>
+            <a href="{% url 'clientes' %}" class="cancel-btn">Cancelar</a>
+        </form>
+    </div>
+</div>
+
+{% endblock %}

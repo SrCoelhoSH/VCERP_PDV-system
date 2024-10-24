@@ -1,0 +1,141 @@
+{% extends 'vcerp_estoque/base.html' %}
+{% load static %}
+{% block content %}
+    <style>
+        /* Estilo para o formulário de produto */
+        .product-form {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: #ecf0f1;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .product-form h2 {
+            width: 100%;
+            text-align: center;
+            margin-bottom: 20px;
+            color: #2c3e50;
+        }
+
+        .product-form label {
+            display: block;
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+
+        .product-form input[type="text"],
+        .product-form input[type="number"],
+        .product-form input[type="date"],
+        .product-form input[type="file"],
+        .product-form textarea,
+        .product-form select {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        .form-group {
+            flex: 1 1 45%;
+            min-width: 200px;
+        }
+
+        .product-form button {
+            width: 100%;
+            padding: 10px;
+            background-color: #3498db;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .product-form button:hover {
+            background-color: #2980b9;
+        }
+
+        .alert-success {
+            background-color: #dff0d8;
+            color: #3c763d;
+            padding: 10px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+        }
+    </style>
+
+    <div class="container">
+        <!-- Certifique-se de usar enctype="multipart/form-data" -->
+        <form class="product-form" action="{% url 'estoque_cadastro' %}" method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            {% if messages %}
+            <div class="alert alert-success">
+                {% for message in messages %}
+                <p>{{ message }}</p>
+                {% endfor %}
+            </div>
+            {% endif %}
+            <h2>Informações do Produto</h2>
+            
+            <div class="form-group">
+                {{ form.nome.label_tag }}
+                {{ form.nome }}
+            </div>
+            <div class="form-group">
+                {{ form.tipo.label_tag }}
+                {{ form.tipo }}
+            </div>
+            <div class="form-group">
+                {{ form.descricao.label_tag }}
+                {{ form.descricao }}
+            </div>
+            <div class="form-group">
+                {{ form.codigo_barra.label_tag }}
+                {{ form.codigo_barra }}
+            </div>
+            <div class="form-group">
+                {{ form.quantidade.label_tag }}
+                {{ form.quantidade }}
+            </div>
+            <div class="form-group">
+                {{ form.preco_compra.label_tag }}
+                {{ form.preco_compra }}
+            </div>
+            <div class="form-group">
+                {{ form.preco_venda.label_tag }}
+                {{ form.preco_venda }}
+            </div>
+            <div class="form-group">
+                {{ form.fornecedor.label_tag }}
+                {{ form.fornecedor }}
+            </div>
+            <div class="form-group">
+                {{ form.unidade_medida.label_tag }}
+                {{ form.unidade_medida }}
+            </div>
+            <div class="form-group">
+                {{ form.estoque_minimo.label_tag }}
+                {{ form.estoque_minimo }}
+            </div>
+            <div class="form-group">
+                {{ form.localizacao.label_tag }}
+                {{ form.localizacao }}
+            </div>
+
+            <!-- Campo para imagem -->
+            <div class="form-group">
+                {{ form.imagem_produto.label_tag }}
+                {{ form.imagem_produto }}
+            </div>
+            
+            <button type="submit">Cadastrar Produto</button>
+        </form>
+    </div>
+{% endblock %}

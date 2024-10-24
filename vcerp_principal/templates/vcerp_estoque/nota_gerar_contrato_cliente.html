@@ -1,0 +1,39 @@
+{% extends 'vcerp_estoque/base.html' %}
+{% load static %}
+{% block content %}
+<section class="row">
+    <h1 class="titulo">Gerar Contrato para Empresa</h1>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <label for="usuario_logado">Gerado Por:</label>
+        <input type="text" id="usuario_logado" name="usuario_logado" value="{{ usuario_logado }}" required readonly>
+        <button type="submit">Gerar Contrato</button>
+        <a href="{'#'}" class="btn-recibos">Voltar</a>
+    </form>
+</section>
+</main>
+</div>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $('#id_cliente').change(function() {
+            var clienteId = $(this).val();
+            if (clienteId !== '') {
+                $.ajax({
+                    url: '/obter-dados-cliente/' + clienteId + '/', // URL para obter os dados do cliente
+                    type: 'GET',
+                    success: function(response) {
+                        $('#id_cnpj').val(response.cpf); // Preenche o campo CPF com o CPF retornado
+                        $('#id_campoendereco1').val(response.endereco); // Preenche o campo endereço com o endereço retornado
+                        $('#id_campotel1').val(response.telefone); // Preenche o campo telefone com o telefone retornado
+                    },
+                    error: function(xhr, status, error) {
+                        console.error(error);
+                    }
+                });
+            }
+        });
+    });
+</script>
+{% endblock %}
