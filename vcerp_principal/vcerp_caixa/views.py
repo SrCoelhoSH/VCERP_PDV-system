@@ -2,7 +2,6 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
-from django.views.decorators.csrf import csrf_exempt
 from django.utils import timezone
 import json
 
@@ -10,7 +9,6 @@ from vcerp_estoque.models import Produto
 from .models import Caixa, CaixaLog
 
 # View da página inicial do caixa
-@csrf_exempt
 @login_required
 def vcerp_caixa_index_view(request):
     context = {}
@@ -72,6 +70,7 @@ def vcerp_caixa_index_view(request):
     return render(request, 'vcerp_caixa/index_caixa.html', context)
 
 # View para buscar um produto pelo código de barras (modificada)
+@login_required
 def buscar_produto(request):
     codigo_barra = request.GET.get('codigo_barra')
     try:
@@ -87,7 +86,6 @@ def buscar_produto(request):
     except Exception as e:
         return JsonResponse({'error': 'Erro interno ao buscar o produto.'}, status=500)
 
-@csrf_exempt
 @login_required
 def cancelar_item(request):
     if request.method == 'POST':
